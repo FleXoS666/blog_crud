@@ -8,6 +8,7 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -31,7 +32,7 @@ class ArticleController extends AbstractController
      * @Route("/ajouter", name="new")
      * @Route("/{id}/modifier", name="edit")
      */
-    public function form(Request $request, EntityManagerInterface $manager, Article $article = null) 
+    public function form(Request $request, EntityManagerInterface $manager,UploadableManager $uploadableManager, Article $article = null) 
     {
         if(!$article) {
             $article = new Article();
@@ -44,11 +45,15 @@ class ArticleController extends AbstractController
             if(!$article->getId()) {
                 $article->setCreatedAt(new \DateTime());
             }
+
+            if($article->getFile() !== null){
+                $uploadableManager->markEntityToUpload($article, $article->getFile());
+            }
             
             $manager->persist($article);
             $manager->flush();
 
-            return $this->redirectToRoute('article_show', ['id' => $article->getId()]);
+            return $this->redirectToRoute('admin_article_show', ['id' => $article->getId()]);
         }
 
         return $this->render('admin/article/create.html.twig', [
@@ -59,7 +64,7 @@ class ArticleController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="show")
+     * @Route("/{id}/article", name="show")
      */
     public function show(Article $article)
     {

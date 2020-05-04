@@ -32,7 +32,8 @@ public function load(ObjectManager $manager)
             $article->setTitle($faker->sentence)
                     ->setContent($faker->paragraph(6))
                     ->setImage($faker->imageUrl())
-                    ->setCreatedAt($faker->dateTimeBetween("-6 months"));
+                    ->setCreatedAt($faker->dateTimeBetween("-6 months"))
+                    ->setIsActive($faker->boolean);
                     // ->setCategory($category);
             /**
              * @var Category $category

@@ -5,11 +5,15 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @UniqueEntity("slug")
+ * @Gedmo\Uploadable(path="uploads/article", filenameGenerator="SHA1", allowOverwrite=false)
  */
 class Article
 {
@@ -34,6 +38,7 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\UploadableFilePath
      */
     private $image;
 
@@ -52,6 +57,29 @@ class Article
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", orphanRemoval=true)
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Gedmo\Slug(fields={"title"})
+     */
+    private $slug;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @Assert\Image(
+     *          maxSize="2M",
+     * maxSizeMessage="Votre fichier doit faire moins de 2 Mo",
+     * mimeTypes={"image/jpeg", "image/png"},
+     * mimeTypesMessage="Le fichier doit etre de type jpeg ou png",
+     * notFoundMessage="Le fichier n'a pas été trouvé",
+     * uploadErrorMessage="Erreur lors du DL du fichier"
+     * )
+     */
+    private $file;
 
     public function __construct()
     {
@@ -150,6 +178,42 @@ class Article
                 $comment->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(File $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
