@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/admin", name ="admin_article_*")
+ * @Route("/admin", name ="admin_article_")
  */
 class ArticleController extends AbstractController
 {
@@ -22,7 +22,7 @@ class ArticleController extends AbstractController
     {
         $articles = $repo->findAll();
 
-        return $this->render('admin/blog/index.html.twig', [
+        return $this->render('admin/article/index.html.twig', [
             'articles' => $articles,
         ]);
     }
@@ -51,7 +51,7 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('article_show', ['id' => $article->getId()]);
         }
 
-        return $this->render('admin/blog/create.html.twig', [
+        return $this->render('admin/article/create.html.twig', [
             'formArticle' => $form->createView(),
             'editMode' => $article->getId() !== null
         ]);
@@ -64,7 +64,7 @@ class ArticleController extends AbstractController
     public function show(Article $article)
     {
         
-        return $this->render('admin/blog/show.html.twig', [
+        return $this->render('admin/article/show.html.twig', [
             'article' => $article,
         ]);
     }
