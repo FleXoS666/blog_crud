@@ -95,4 +95,10 @@ class SiteController extends AbstractController
             'article' => $article
         ]);
     }
+
+    public function getSideBar(CategoryRepository $categoryRepository){
+        return $this->render('site/blog/_sidebar.html.twig',[
+                'categories' => $categoryRepository->listCategories()
+        ]);
+    }
 }
