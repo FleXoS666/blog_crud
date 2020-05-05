@@ -1,13 +1,12 @@
 {% extends "site/blog/layout.html.twig" %}
 
-{% block title %}Actus{% endblock %}
+{% block title %}{{category.title}}{% endblock %}
 
 {% block blogContent %}
-<h1>Actus</h1>
-
+<h1>{{category.title}}</h1>
+<p>{{ category.description}}</p>
 {% for article in articles %}
-
-{% include "site/blog/_card.html.twig" %}
+    {% include "site/blog/_card.html.twig" %}
     {% else %}
         <h2>Il n'y a aucun article</h2>
 {% endfor %}

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,4 +55,29 @@ class SiteController extends AbstractController
             'articles' => $articles
         ]);
     }
+
+
+    /**
+     * @Route("/blog/categorie/{slug}", name="blog_category")
+     */
+    public function category(CategoryRepository $categoryRepository,PaginatorInterface $paginator, Request $request,$slug) : Response
+    {
+        $category= $categoryRepository->detailedCategory($slug);
+        // dd($category);
+        if(!$category){
+            throw $this->createNotFoundException('Catégorie introuvable');
+        }
+
+        $articles = $paginator->paginate(
+            $category->getArticles(),
+            $request->query->get('page', 1),
+            5
+        );
+// dd($category->getArticles());
+
+        return $this->render('site/blog/category.html.twig',[
+            'category' => $category,
+            'articles' => $articles
+        ]);
+}
 }
