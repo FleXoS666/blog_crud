@@ -80,4 +80,19 @@ class SiteController extends AbstractController
             'articles' => $articles
         ]);
 }
+
+    /**
+     * @Route("/blog/{slug}", name="blog_show")
+     */
+    public function blogShow(ArticleRepository $articleRepository, $slug) : Response
+    {
+
+        $article = $articleRepository->detailedArticle($slug);
+        if(!$article){
+            throw $this->createNotFoundException('Article introuvable');
+        }
+        return $this->render('site/blog/show.html.twig',[
+            'article' => $article
+        ]);
+    }
 }
