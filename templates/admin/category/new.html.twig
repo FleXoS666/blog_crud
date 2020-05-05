@@ -1,0 +1,11 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Nouvelle catégorie{% endblock %}
+
+{% block content %}
+    <h1>Création nouvelle catégorie</h1>
+
+    {{ include('admin/category/_form.html.twig') }}
+
+    <a href="{{ path('admin_category_index') }}" class="btn btn-link">retour à la liste</a>
+{% endblock %}

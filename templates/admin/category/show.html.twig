@@ -1,0 +1,23 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block content %}
+    <h1>{{category.title}}</h1>
+<p>{{category.description}}</p>
+<h2>Article liés</h2>
+        {% for article in category.articles %}
+            <li>
+                <a href="{{path('admin_article_show', {'id': article.id}) }}"> {{ article.title }}</a>
+            </li>
+            {% else %}
+                <li>aucun article</li>
+        {% endfor %}
+<p>
+    <a href="{{ path('admin_category_index') }}" class="btn btn_link">retour à la liste</a>
+</p>
+<p>
+    <a href="{{ path('admin_category_edit', {'id': category.id}) }}" class="btn btn-primary">Modifier</a>
+</p>
+    {{ include('admin/category/_delete_form.html.twig') }}
+{% endblock %}
